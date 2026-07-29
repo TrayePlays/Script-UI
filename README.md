@@ -10,27 +10,28 @@ Dynamic, script side json ui forms, every property listed below can be changed w
 - Edit header offset
 - Edit title (see label editing) with extra arguments
 ```typescript
-export interface TitleHeaderOptions {
+export interface HeaderOptions {
 
     /**
      * Auto-matically centers the title horizontally in respect to the form
      * @default false
      */
     autoCenter?: boolean;
-
-    /**
-     * When true, the titleX offset combines with the calculated text alignment offset,
-     * otherwise the titleX offset is overrided
-     * @default false
-     */
-    alignmentShouldCombine?: boolean;
 }
 ```
   
 - Edit form body texture
 - Edit form body size
 
-**Complete control over buttons:**
+**Control over the scrolling panel**
+- Edit scrolling panel offset
+- Edit scrolling panel size
+
+```typescript
+button(button: Button, header: boolean = false): DynamicActionUI
+```
+- The header option makes the button be anchored to the form header,
+  instead of the scrolling window, useful for close buttons
 - Edit button x offset and y offset
 - Edit button width and height
 - Edit button default and hover textures
@@ -40,11 +41,6 @@ export interface TitleHeaderOptions {
 - Several complex and useful button arguments:
 ```typescript
 export interface ButtonOptions {
-
-    /**
-     * Calls the callback function when the button has been clicked
-     */
-    onClick?: () => void;
 
     /**
      * Centers the image in the button
@@ -104,6 +100,17 @@ export interface ButtonOptions {
 - Edit image texture
 - Edit image x offset and y offset
 - Edit image width and height
+- Edit complex image options
+```typescript
+export interface ImageOptions {
+
+    /**
+     * If the image should appear under the button or not
+     * @default false
+     */
+    appearUnderButton: boolean
+}
+```
 
 **Complete control over labels:**
 - Edit label text
@@ -113,7 +120,7 @@ export interface ButtonOptions {
 ```typescript
 type TextAlignment = "left" | "center" | "right";
 ```
-- Text wrapping system (charcter and word wrap)
+- Text wrapping system (charcter and word wrap), edit wrap width
 ```typescript
 export interface LabelOptions {
 
