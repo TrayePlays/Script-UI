@@ -21,6 +21,8 @@ export class DynamicActionUI {
     private hasTitle = false;
     private addTitle: (() => any) | undefined;
 
+    private buttonStrings: { str: string, texture: string | undefined }[] = [];
+
     public scrollHeight: number = 0;
     private scrollingPanel: ScrollingPanel;
 
@@ -106,7 +108,7 @@ export class DynamicActionUI {
         }
     }
 
-    button(button: Button): DynamicActionUI {
+    button(button: Button, header: boolean = false): DynamicActionUI {
         const { ButtonImage: image, ButtonLabel: label, options } = button;
 
         const parentDim = {
@@ -182,14 +184,41 @@ export class DynamicActionUI {
             hover_text: hoverText ?? ""
         };
 
-        const nums = [buttonDimensions.width, buttonDimensions.height, buttonOffset.x + this.NEGATIVE_OFFSET, buttonOffset.y + this.NEGATIVE_OFFSET, iw, ih, ix + this.NEGATIVE_OFFSET, iy + this.NEGATIVE_OFFSET, tx + this.NEGATIVE_OFFSET, ty + this.NEGATIVE_OFFSET].map((n) => Math.floor(n));
-        const string = this.buildDynamicString(packets, nums, `b${this.generateRandomString(9)}:`);
+        // Double values
+        const bw = buttonDimensions.width;
+        const bh = buttonDimensions.height;
+        const bx = buttonOffset.x + this.NEGATIVE_OFFSET;
+        const by = buttonOffset.y + this.NEGATIVE_OFFSET;
+        ix = ix + this.NEGATIVE_OFFSET;
+        iy = iy + this.NEGATIVE_OFFSET;
+        tx = tx + this.NEGATIVE_OFFSET;
+        ty = ty + this.NEGATIVE_OFFSET;
 
-        button.elementIndex = this.buttons.length;
+
+        const nums = [bw, bh, bx, by, iw, ih, ix, iy, tx, ty].map((n) => Math.floor(n));
+
+        console.warn(JSON.stringify(nums))
+
+        nums.map(n => {
+            if (n > 999) {
+                return 999
+            }
+
+            else if (n < 0) {
+                return 0
+            }
+
+            else return n
+        })
+
+        // Scroll buttons using .button
+        const string = this.buildDynamicString(packets, nums, `${header ? 'h' : 'b'}${this.generateRandomString(9)}:`);
+
+        button.elementIndex = this.buttonStrings.length;
+
+        this.buttonStrings.push({ str: string, texture: image?.texture });
 
         this.buttons.push(button);
-        this.f.button(string, image?.texture);
-
         this.tryUpdateScrollHeight(buttonDimensions.height + buttonOffset.y);
 
         return this;
@@ -235,7 +264,7 @@ export class DynamicActionUI {
         let h = image.getBoundingH();
 
         const nums = [x + this.NEGATIVE_OFFSET, y + this.NEGATIVE_OFFSET, w, h].map((n) => Math.floor(n));
-        const string = `i${this.generateRandomString(9)}:${nums.map((n) => this.formatNumber(n)).join(":")}`;
+        const string = `${image.imageOptions.appearUnderButton ? 'u' : 'o'}${this.generateRandomString(9)}:${nums.map((n) => this.formatNumber(n)).join(":")}`;
 
         this.f.header(`${string}:${image.texture}`); // No need for packets as only one packet, meaning i can just read the remaining string
 
@@ -507,10 +536,15 @@ export class DynamicActionUI {
     show(player: Player): void {
         if (!this.hasTitle) throw new Error("DynamicActionUI Needs a title!");
 
+        for (const button of this.buttonStrings) {
+            this.f.button(button.str, button.texture);
+        }
+
         // This is done after calculating scroll height as scroll height is sent through the title
         if (this.addTitle) this.addTitle();
 
         this.f.show(player).then((response) => {
+            
             if (response.canceled) {
 
                 // Hard close
