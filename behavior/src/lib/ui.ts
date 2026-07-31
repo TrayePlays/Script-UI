@@ -89,7 +89,7 @@ export class DynamicActionUI {
         titleOffset += title.getBoundingX();
         
 
-        const nums = [this.width, this.height, this.headerSize.width, this.headerSize.height, correctedHeaderX + this.NEGATIVE_OFFSET, correctedHeaderY + this.NEGATIVE_OFFSET, titleOffset + this.NEGATIVE_OFFSET, title.getBoundingY() + this.NEGATIVE_OFFSET].map(n => Math.floor(n));
+        const nums = [this.width, this.height, this.headerSize.width, this.headerSize.height, correctedHeaderX + this.NEGATIVE_OFFSET, correctedHeaderY + this.NEGATIVE_OFFSET, titleOffset + this.NEGATIVE_OFFSET, title.getBoundingY() + this.NEGATIVE_OFFSET];
 
         this.hasTitle = true;
 
@@ -107,7 +107,7 @@ export class DynamicActionUI {
 
             nums.push(this.scrollHeight);
 
-            const string = this.buildDynamicString(packets, nums.map(n => Math.floor(n)), "dynamic:");
+            const string = this.buildDynamicString(packets, nums.map((n) => this.formatNumber(Math.floor(n))), "dynamic:");
             this.titleString = string;
 
             this.f.title(string);
@@ -194,27 +194,26 @@ export class DynamicActionUI {
         // Double values
         const bw = buttonDimensions.width;
         const bh = buttonDimensions.height;
-        const bx = buttonOffset.x + this.NEGATIVE_OFFSET;
-        const by = buttonOffset.y + this.NEGATIVE_OFFSET;
-        ix = ix + this.NEGATIVE_OFFSET;
-        iy = iy + this.NEGATIVE_OFFSET;
-        tx = tx + this.NEGATIVE_OFFSET;
-        ty = ty + this.NEGATIVE_OFFSET;
+        const bx = (buttonOffset.x + this.NEGATIVE_OFFSET) * 10;
+        const by = (buttonOffset.y + this.NEGATIVE_OFFSET) * 10;
+        ix = (ix + this.NEGATIVE_OFFSET) * 10;
+        iy = (iy + this.NEGATIVE_OFFSET) * 10;
+        tx = (tx + this.NEGATIVE_OFFSET) * 10;
+        ty = (ty + this.NEGATIVE_OFFSET) * 10;
 
 
-        const nums = [bw, bh, bx, by, iw, ih, ix, iy, tx, ty].map((n) => Math.floor(n));
-
-        nums.map(n => {
-            if (n > 999) {
-                return 999
-            }
-
-            else if (n < 0) {
-                return 0
-            }
-
-            else return n
-        })
+        const nums = [
+            this.formatNumber(Math.floor(bw)),
+            this.formatNumber(Math.floor(bh)),
+            this.formatNumber1DP(Math.floor(bx)),
+            this.formatNumber1DP(Math.floor(by)),
+            this.formatNumber(Math.floor(iw)),
+            this.formatNumber(Math.floor(ih)),
+            this.formatNumber1DP(Math.floor(ix)),
+            this.formatNumber1DP(Math.floor(iy)),
+            this.formatNumber1DP(Math.floor(tx)),
+            this.formatNumber1DP(Math.floor(ty))
+        ];
 
         // Scroll buttons using .button
         const string = this.buildDynamicString(packets, nums, `${header ? 'h' : 'b'}${this.generateRandomString(9)}:`);
@@ -268,8 +267,14 @@ export class DynamicActionUI {
         let w = image.getBoundingW();
         let h = image.getBoundingH();
 
-        const nums = [x + this.NEGATIVE_OFFSET, y + this.NEGATIVE_OFFSET, w, h].map((n) => Math.floor(n));
-        const string = `${image.imageOptions.appearUnderButton ? 'u' : 'o'}${this.generateRandomString(9)}:${nums.map((n) => this.formatNumber(n)).join(":")}`;
+        const nums = [
+            this.formatNumber1DP(Math.floor((x + this.NEGATIVE_OFFSET) * 10)),
+            this.formatNumber1DP(Math.floor((y + this.NEGATIVE_OFFSET) * 10)),
+            this.formatNumber(Math.floor(w)),
+            this.formatNumber(Math.floor(h))
+        ];
+
+        const string = `${image.imageOptions.appearUnderButton ? 'u' : 'o'}${this.generateRandomString(9)}:${nums.join(":")}`;
 
         this.f.header(`${string}:${image.texture}`); // No need for packets as only one packet, meaning i can just read the remaining string
 
@@ -297,7 +302,12 @@ export class DynamicActionUI {
             font_type: label.labelOptions.fontType ?? LabelOptionFontType.Default
         }
 
-        const nums = [x + this.NEGATIVE_OFFSET, y + this.NEGATIVE_OFFSET, fontSize * 100].map((n) => Math.floor(n));
+        const nums = [
+            this.formatNumber1DP(Math.floor((x + this.NEGATIVE_OFFSET) * 10)),
+            this.formatNumber1DP(Math.floor((y + this.NEGATIVE_OFFSET) * 10)),
+            this.formatNumber(fontSize * 100)
+        ];
+
         const string = this.buildDynamicString(packets, nums, `l${this.generateRandomString(9)}`);
 
         this.labelStrings.push(string);
@@ -327,8 +337,14 @@ export class DynamicActionUI {
         x -= this.countElements();
         y -= topPadding;
 
-        const nums = [x + 500, y + 500, w, h, lookAtCursor ? 1 : 0].map((n) => Math.floor(n));
-        const string = `p${this.generateRandomString(9)}:${nums.map((n) => this.formatNumber(n)).join(":")}`;
+        const nums = [
+            this.formatNumber1DP(Math.floor((x + this.NEGATIVE_OFFSET) * 10)),
+            this.formatNumber1DP(Math.floor((y + this.NEGATIVE_OFFSET) * 10)),
+            this.formatNumber(Math.floor(w)),
+            this.formatNumber(Math.floor(h)),
+            this.formatNumber(lookAtCursor ? 1 : 0)
+        ];
+        const string = `p${this.generateRandomString(9)}:${nums.join(":")}`;
 
         this.tryUpdateScrollHeight(h + y);
 
@@ -617,8 +633,22 @@ export class DynamicActionUI {
         return num.toString().padStart(this.PACKET_INDEXER_SIZE, "0");
     }
 
-    private buildDynamicString(packets: DynamicPacketMap, nums: number[], prefix: string): string {
-        let result = `${prefix}${nums.map((n) => this.formatNumber(n)).join(":")}|`;
+    private formatNumber1DP(num: number): string {
+
+        if (num < -999 || num > 9999) {
+            throw new Error("A value is either over 9999 or less than -999")
+        }
+
+        // -99 to 999
+        if (num < 0) {
+            return `-${(-num).toString().padStart(this.PACKET_INDEXER_SIZE, "0")}`;
+        }
+        if (num > 9999) return "9999";
+        return num.toString().padStart(this.PACKET_INDEXER_SIZE + 1, "0");
+    }
+
+    private buildDynamicString(packets: DynamicPacketMap, nums: string[], prefix: string): string {
+        let result = `${prefix}${nums.join(":")}|`;
 
         let cumulativeLength = 0;
         const keys = Object.keys(packets);
@@ -681,4 +711,3 @@ f.title("${this.titleString}");
         return string;
     }
 }
-

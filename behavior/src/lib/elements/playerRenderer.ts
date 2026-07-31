@@ -20,7 +20,10 @@ export class PlayerRenderer extends BaseElement {
     constructor(
         public size: Dimensions,
         public offset: Position,
-        public options: PlayerRendererOptions
+        public options: PlayerRendererOptions = {
+            lookAtCursor: true,
+            topPadding: 0
+        }
     ) {
         super(offset, size);
     }

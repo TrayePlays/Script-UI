@@ -139,7 +139,6 @@
                                                                             "source_property_name": "((('%.' + (#title_text - ('%.' + ($font_type_index + $header_size) + 's') * #title_text) + 's') * #title_text) - (('%.' + (#title_text - ('%.' + $font_type_index + 's') * #title_text) + 's') * #title_text))",
                                                                             "target_property_name": "#font_type"
                                                                         }
-                                                                    
                                                                     ]
                                                                 }
                                                             }
@@ -194,6 +193,49 @@
                                 ],
                                 "controls": [
                                     {
+                                        "header_button_holder": {
+                                            "type": "panel",
+                                            "size": [
+                                                "100%",
+                                                "100%"
+                                            ],
+                                            "anchor_from": "top_left",
+                                            "anchor_to": "top_left",
+                                            "$visibility_flag": "h",
+                                            "layer": 30,
+                                            "controls": [
+                                                {
+                                                    "buttons_factory": {
+                                                        "type": "stack_panel",
+                                                        "size": [
+                                                            "100% - 4px",
+                                                            0
+                                                        ],
+                                                        "orientation": "horizontal",
+                                                        "anchor_from": "top_left",
+                                                        "anchor_to": "top_left",
+                                                        "factory": {
+                                                            "name": "buttons",
+                                                            "factory_variables": [
+                                                                "$header_size",
+                                                                "$negative_offset",
+                                                                "$visibility_flag"
+                                                            ],
+                                                            "control_name": "@dynamic.custom_button_panel"
+                                                        },
+                                                        "collection_name": "form_buttons",
+                                                        "bindings": [
+                                                            {
+                                                                "binding_name": "#form_button_length",
+                                                                "binding_name_override": "#collection_length"
+                                                            }
+                                                        ]
+                                                    }
+                                                }
+                                            ]
+                                        }
+                                    },
+                                    {
                                         "sub_panel": {
                                             "type": "panel",
                                             "anchor_from": "top_left",
@@ -211,7 +253,7 @@
                                             },
                                             "controls": [
                                                 {
-                                                    "buttons": {
+                                                    "dynamic_button_panel_main": {
                                                         "type": "panel",
                                                         "size": [
                                                             "100%",
@@ -219,89 +261,44 @@
                                                         ],
                                                         "anchor_from": "top_left",
                                                         "anchor_to": "top_left",
-
-                                                        "$visibility_flag": "h",
-                                                        "layer": 30,
-
                                                         "controls": [
                                                             {
-                                                                "buttons_factory": {
+                                                                "long_form_panel": {
                                                                     "type": "stack_panel",
-                                                                    "size": [
-                                                                        "100% - 4px",
-                                                                        0
-                                                                    ],
-                                                                    "orientation": "horizontal",
-                                                                    "anchor_from": "top_left",
-                                                                    "anchor_to": "top_left",
-                                                                    "factory": {
-                                                                        "name": "buttons",
-                                                                        "factory_variables": [
-                                                                            "$header_size",
-                                                                            "$negative_offset",
-                                                                            "$visibility_flag"
-                                                                        ],
-                                                                        "control_name": "@dynamic.custom_button_panel"
-                                                                    },
-                                                                    "collection_name": "form_buttons",
-                                                                    "bindings": [
-                                                                        {
-                                                                            "binding_name": "#form_button_length",
-                                                                            "binding_name_override": "#collection_length"
-                                                                        }
-                                                                    ]
-                                                                }
-                                                            },
-                                                            {
-                                                                "dynamic_button_panel_main": {
-                                                                    "type": "panel",
                                                                     "size": [
                                                                         "100%",
                                                                         "100%"
                                                                     ],
+                                                                    "orientation": "vertical",
+                                                                    "layer": 1,
                                                                     "anchor_from": "top_left",
                                                                     "anchor_to": "top_left",
                                                                     "controls": [
                                                                         {
-                                                                            "long_form_panel": {
-                                                                                "type": "stack_panel",
+                                                                            "scrolling_panel@common.scrolling_panel": {
+                                                                                "anchor_to": "top_left",
+                                                                                "anchor_from": "top_left",
+                                                                                "$show_background": false,
                                                                                 "size": [
                                                                                     "100%",
                                                                                     "100%"
                                                                                 ],
-                                                                                "orientation": "vertical",
-                                                                                "layer": 1,
-                                                                                "anchor_from": "top_left",
-                                                                                "anchor_to": "top_left",
-                                                                                "controls": [
-                                                                                    {
-                                                                                        "scrolling_panel@common.scrolling_panel": {
-                                                                                            "anchor_to": "top_left",
-                                                                                            "anchor_from": "top_left",
-                                                                                            "$show_background": false,
-                                                                                            "size": [
-                                                                                                "100%",
-                                                                                                "100%"
-                                                                                            ],
-                                                                                            "$scrolling_content": "dynamic.buttons_scrolling_faker_panel",
-                                                                                            "$scroll_size": [
-                                                                                                5,
-                                                                                                "100% - 4px"
-                                                                                            ],
-                                                                                            "$scrolling_pane_size": [
-                                                                                                "100% - 4px",
-                                                                                                "100% - 2px"
-                                                                                            ],
-                                                                                            "$scrolling_pane_offset": [
-                                                                                                0,
-                                                                                                0
-                                                                                            ],
-                                                                                            "$scroll_bar_right_padding_size": [
-                                                                                                0,
-                                                                                                0
-                                                                                            ]
-                                                                                        }
-                                                                                    }
+                                                                                "$scrolling_content": "dynamic.buttons_scrolling_faker_panel",
+                                                                                "$scroll_size": [
+                                                                                    5,
+                                                                                    "100% - 4px"
+                                                                                ],
+                                                                                "$scrolling_pane_size": [
+                                                                                    "100% - 4px",
+                                                                                    "100% - 2px"
+                                                                                ],
+                                                                                "$scrolling_pane_offset": [
+                                                                                    0,
+                                                                                    0
+                                                                                ],
+                                                                                "$scroll_bar_right_padding_size": [
+                                                                                    0,
+                                                                                    0
                                                                                 ]
                                                                             }
                                                                         }
@@ -365,6 +362,7 @@
                         1,
                         1
                     ],
+                    "$offset_reducer": 0.1,
                     "controls": [
                         {
                             "player_renderer": {
@@ -399,27 +397,27 @@
                                     },
                                     {
                                         "binding_type": "view",
-                                        "source_property_name": "((#form_text - '%.11s' * #form_text) - $negative_offset)",
+                                        "source_property_name": "(($offset_reducer * (#form_text - '%.11s' * #form_text)) - $negative_offset)",
                                         "target_property_name": "#anchored_offset_value_x"
                                     },
                                     {
                                         "binding_type": "view",
-                                        "source_property_name": "((#form_text - '%.15s' * #form_text) - $negative_offset)",
+                                        "source_property_name": "(($offset_reducer * (#form_text - '%.16s' * #form_text)) - $negative_offset)",
                                         "target_property_name": "#anchored_offset_value_y"
                                     },
                                     {
                                         "binding_type": "view",
-                                        "source_property_name": "(#form_text - '%.19s' * #form_text)",
+                                        "source_property_name": "(#form_text - '%.21s' * #form_text)",
                                         "target_property_name": "#size_binding_x"
                                     },
                                     {
                                         "binding_type": "view",
-                                        "source_property_name": "(#form_text - '%.23s' * #form_text)",
+                                        "source_property_name": "(#form_text - '%.25s' * #form_text)",
                                         "target_property_name": "#size_binding_y"
                                     },
                                     {
                                         "binding_type": "view",
-                                        "source_property_name": "((#form_text - '%.27s' * #form_text) = 1)",
+                                        "source_property_name": "((#form_text - '%.29s' * #form_text) = 1)",
                                         "target_property_name": "#look_at_cursor"
                                     }
                                 ]
@@ -483,7 +481,6 @@
             }
         ]
     },
-    
     "custom_button_panel": {
         "type": "panel",
         "size": [
@@ -496,15 +493,14 @@
                     "$default_button_background_texture|default": "textures/ui/default_button",
                     "$hover_button_background_texture|default": "textures/ui/hover_button",
                     "$pressed_button_background_texture|default": "textures/ui/pressed_button",
-
-                    "$font_scale_index": 51,
-                    "$font_type_index": 59,
-                    "$button_text_index": 67,
-                    "$default_tex_index": 75,
-                    "$hover_tex_index": 83,
-                    "$hover_text_index": 91,
+                    "$font_scale_index": 57,
+                    "$font_type_index": 65,
+                    "$button_text_index": 73,
+                    "$default_tex_index": 81,
+                    "$hover_tex_index": 89,
+                    "$hover_text_index": 97,
                     "$font_scale_reducer": 0.01,
-
+                    "$offset_reducer": 0.1,
                     "type": "panel",
                     "size": [
                         1,
@@ -542,12 +538,12 @@
                                     },
                                     {
                                         "binding_type": "view",
-                                        "source_property_name": "((#form_button_text - '%.43s' * #form_button_text) - $negative_offset)",
+                                        "source_property_name": "(($offset_reducer * (#form_button_text - '%.47s' * #form_button_text)) - $negative_offset)",
                                         "target_property_name": "#anchored_offset_value_x"
                                     },
                                     {
                                         "binding_type": "view",
-                                        "source_property_name": "((#form_button_text - '%.47s' * #form_button_text) - $negative_offset)",
+                                        "source_property_name": "(($offset_reducer * (#form_button_text - '%.52s' * #form_button_text)) - $negative_offset)",
                                         "target_property_name": "#anchored_offset_value_y"
                                     },
                                     {
@@ -614,22 +610,22 @@
                                     },
                                     {
                                         "binding_type": "view",
-                                        "source_property_name": "(#form_button_text - '%.27s' * #form_button_text)",
+                                        "source_property_name": "(#form_button_text - '%.29s' * #form_button_text)",
                                         "target_property_name": "#size_binding_x"
                                     },
                                     {
                                         "binding_type": "view",
-                                        "source_property_name": "(#form_button_text - '%.31s' * #form_button_text)",
+                                        "source_property_name": "(#form_button_text - '%.33s' * #form_button_text)",
                                         "target_property_name": "#size_binding_y"
                                     },
                                     {
                                         "binding_type": "view",
-                                        "source_property_name": "((#form_button_text - '%.35s' * #form_button_text) - $negative_offset)",
+                                        "source_property_name": "(($offset_reducer * (#form_button_text - '%.37s' * #form_button_text)) - $negative_offset)",
                                         "target_property_name": "#anchored_offset_value_x"
                                     },
                                     {
                                         "binding_type": "view",
-                                        "source_property_name": "((#form_button_text - '%.39s' * #form_button_text) - $negative_offset)",
+                                        "source_property_name": "(($offset_reducer * (#form_button_text - '%.42s' * #form_button_text)) - $negative_offset)",
                                         "target_property_name": "#anchored_offset_value_y"
                                     },
                                     {
@@ -705,12 +701,12 @@
                                     },
                                     {
                                         "binding_type": "view",
-                                        "source_property_name": "((#form_button_text - '%.19s' * #form_button_text) - $negative_offset)",
+                                        "source_property_name": "(($offset_reducer * (#form_button_text - '%.19s' * #form_button_text)) - $negative_offset)",
                                         "target_property_name": "#anchored_offset_value_x"
                                     },
                                     {
                                         "binding_type": "view",
-                                        "source_property_name": "((#form_button_text - '%.23s' * #form_button_text) - $negative_offset)",
+                                        "source_property_name": "(($offset_reducer * (#form_button_text - '%.24s' * #form_button_text)) - $negative_offset)",
                                         "target_property_name": "#anchored_offset_value_y"
                                     }
                                 ]
@@ -981,9 +977,10 @@
                         1,
                         1
                     ],
-                    "$text_index": 22,
-                    "$font_type_index": 30,
+                    "$text_index": 24,
+                    "$font_type_index": 32,
                     "$font_scale_reducer": 0.01,
+                    "$offset_reducer": 0.1,
                     "controls": [
                         {
                             "label": {
@@ -995,7 +992,7 @@
                                 ],
                                 "anchor_from": "top_left",
                                 "anchor_to": "top_left",
-                                "text": "#text",
+                                "text": "hello world",
                                 "font_scale_factor": 1,
                                 "use_anchored_offset": true,
                                 "property_bag": {
@@ -1011,17 +1008,17 @@
                                     },
                                     {
                                         "binding_type": "view",
-                                        "source_property_name": "((#form_button_text - '%.10s' * #form_button_text) - $negative_offset)",
+                                        "source_property_name": "(($offset_reducer * (#form_button_text - '%.10s' * #form_button_text)) - $negative_offset)",
                                         "target_property_name": "#anchored_offset_value_x"
                                     },
                                     {
                                         "binding_type": "view",
-                                        "source_property_name": "((#form_button_text - '%.14s' * #form_button_text) - $negative_offset)",
+                                        "source_property_name": "(($offset_reducer * (#form_button_text - '%.15s' * #form_button_text)) - $negative_offset)",
                                         "target_property_name": "#anchored_offset_value_y"
                                     },
                                     {
                                         "binding_type": "view",
-                                        "source_property_name": "($font_scale_reducer * (#form_button_text - '%.18s' * #form_button_text))",
+                                        "source_property_name": "($font_scale_reducer * (#form_button_text - '%.20s' * #form_button_text))",
                                         "target_property_name": "#font_scale_factor"
                                     },
                                     {
@@ -1056,6 +1053,7 @@
                         1,
                         1
                     ],
+                    "$offset_reducer": 0.1,
                     "controls": [
                         {
                             "image": {
@@ -1086,27 +1084,27 @@
                                     },
                                     {
                                         "binding_type": "view",
-                                        "source_property_name": "((#form_button_text - '%.11s' * #form_button_text) - $negative_offset)",
+                                        "source_property_name": "(($offset_reducer * (#form_button_text - '%.11s' * #form_button_text)) - $negative_offset)",
                                         "target_property_name": "#anchored_offset_value_x"
                                     },
                                     {
                                         "binding_type": "view",
-                                        "source_property_name": "((#form_button_text - '%.15s' * #form_button_text) - $negative_offset)",
+                                        "source_property_name": "(($offset_reducer * (#form_button_text - '%.16s' * #form_button_text)) - $negative_offset)",
                                         "target_property_name": "#anchored_offset_value_y"
                                     },
                                     {
                                         "binding_type": "view",
-                                        "source_property_name": "(#form_button_text - '%.19s' * #form_button_text)",
+                                        "source_property_name": "(#form_button_text - '%.21s' * #form_button_text)",
                                         "target_property_name": "#size_binding_x"
                                     },
                                     {
                                         "binding_type": "view",
-                                        "source_property_name": "(#form_button_text - '%.23s' * #form_button_text)",
+                                        "source_property_name": "(#form_button_text - '%.25s' * #form_button_text)",
                                         "target_property_name": "#size_binding_y"
                                     },
                                     {
                                         "binding_type": "view",
-                                        "source_property_name": "(#form_button_text - '%.27s' * #form_button_text)",
+                                        "source_property_name": "(#form_button_text - '%.29s' * #form_button_text)",
                                         "target_property_name": "#texture"
                                     },
                                     {
@@ -1181,7 +1179,10 @@
                 }
             }
         ]
-    },
+    }
+    
+    
+    /*,
     "structure_renderer": {
         "type": "input_panel",
         "focus_enabled": true,
@@ -1283,4 +1284,5 @@
             }
         ]
     }
+        */
 }
