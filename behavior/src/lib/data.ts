@@ -1,4 +1,4 @@
-import { BodyTextures } from "./general/types";
+import { BodyTextures, Dimensions, Position } from "./general/types";
 
 // ----------------------------------------!!!
 // Edit the default textures for your pack.
@@ -15,3 +15,6 @@ export const DEFAULT_PANEL_TEX: BodyTextures = {
 }
 
 export const BLANK_TEX = "textures/ui/forms/blank";
+
+export const DOFF: Position = { x: 0, y: 0 };
+export const DSIZE: Dimensions = { width: 0, height: 0 };

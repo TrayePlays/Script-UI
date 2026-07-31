@@ -191,6 +191,13 @@ export class DynamicActionUI {
             hover_text: hoverText ?? ""
         };
 
+        // Fix button rendering bug where the button is 2 pixels smaller than it actually should be
+        buttonDimensions.width += 2
+        buttonDimensions.height += 2
+        buttonOffset.x --;
+        buttonOffset.y --;
+        
+
         // Double values
         const bw = buttonDimensions.width;
         const bh = buttonDimensions.height;

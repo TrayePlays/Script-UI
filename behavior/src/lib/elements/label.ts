@@ -74,6 +74,14 @@ export class Label extends BaseElement {
             for (let i = 0; i < this.text.length; i++) {
                 const char = this.text[i];
 
+                // Manual line break
+                if (char === "\n") {
+                    lines.push(currLine);
+                    currLine = "";
+                    currCharCount = 0;
+                    continue;
+                }
+
                 const charWidth = Label.getTextWidth(currLine + char, this.fontSize);
 
                 if (charWidth > this.wrapWidth!) {
@@ -104,43 +112,64 @@ export class Label extends BaseElement {
         }
 
         else if (this.labelOptions.wrapType === LabelOptionWrapType.WordWrap) {
-            const tokens = this.text.split(' ');
+            const lines: string[] = [];
 
-            const lines = [];
-            let currLine: string = '';
-            let currCharCount = 0;
+            let currLine = "";
+            let currWord = "";
 
-            for (let i = 0; i < tokens.length; i++) {
-                const chars = tokens[i];
-                const charWidth = Label.getTextWidth(currLine + chars, this.fontSize);
+            const flushWord = () => {
+                if (currWord === "") return;
 
-                if (charWidth > this.wrapWidth!) {
-                    if (currCharCount === 0) {
-                        lines.push(chars);
-                        currLine = '';
-                        currCharCount = 0;
-                        continue;
+                const candidate = currLine + currWord;
+
+                if (Label.getTextWidth(candidate, this.fontSize) > this.wrapWidth!) {
+                    if (currLine !== "") {
+                        lines.push(currLine);
+                        currLine = currWord;
+                    } else {
+                        // Word itself exceeds wrap width.
+                        currLine = currWord;
                     }
-
-                    lines.push(currLine);
-
-                    currLine = '';
-                    currCharCount = 0;
+                } else {
+                    currLine = candidate;
                 }
 
-                if (currLine !== '') currLine += " ";
-                currLine += chars;
-                currCharCount++;
+                currWord = "";
+            };
 
-                // If string is ending
-                if (i === tokens.length - 1) {
-                    lines.push(currLine);
+            for (let i = 0; i < this.text.length; i++) {
+                const ch = this.text[i];
+
+                // Preserve formatting codes as part of the current word.
+                if (ch === "§" && i + 1 < this.text.length) {
+                    currWord += ch + this.text[++i];
+                    continue;
                 }
+
+                if (ch === " ") {
+                    flushWord();
+                    currLine += " ";
+                    continue;
+                }
+
+                if (ch === "\n") {
+                    flushWord();
+                    lines.push(currLine);
+                    currLine = "";
+                    continue;
+                }
+
+                currWord += ch;
+            }
+
+            flushWord();
+
+            if (currLine !== "") {
+                lines.push(currLine);
             }
 
             this.size.height = this.getTextHeight() * lines.length;
-
-            wrappedText = lines.join('\n');
+            wrappedText = lines.join("\n");
         }
 
         return wrappedText;
@@ -178,27 +207,33 @@ export class Label extends BaseElement {
     public static getTextWidth(text: string, fontScale: number): number {
         let length = 0;
 
-        for (let i = 0;i < text.length;i ++) {
+        for (let i = 0; i < text.length; i++) {
             const char = text[i];
-            const nextChar: string | undefined = (i === text.length - 1) ? undefined : text[i + 1];
-            const charWidth = charMap.get(char) ?? DEFAULT_CHAR_WIDTH;
+            const nextChar = i === text.length - 1 ? undefined : text[i + 1];
 
-            if (char === "§" && nextChar !== "§") {
-                i += 1;
-                continue; // Overall i goes up by 2
-            }
-
-            else if (char === "\\" && nextChar === "§") {
-                i += 1;
-                length += charWidth + (charMap.get(nextChar) ?? DEFAULT_CHAR_WIDTH); // Overall length goes up
-                continue; // Overall i goes up by 2
-            }
-
-            else if (char === "§" && !nextChar) {
+            // Ignore newlines
+            if (char === "\n") {
                 continue;
             }
 
-            length += charWidth;
+            if (char === "§" && nextChar !== "§") {
+                i += 1;
+                continue;
+            }
+
+            if (char === "\\" && nextChar === "§") {
+                length +=
+                    (charMap.get(char) ?? DEFAULT_CHAR_WIDTH) +
+                    (charMap.get(nextChar) ?? DEFAULT_CHAR_WIDTH);
+                i += 1;
+                continue;
+            }
+
+            if (char === "§" && !nextChar) {
+                continue;
+            }
+
+            length += charMap.get(char) ?? DEFAULT_CHAR_WIDTH;
         }
 
         return length * fontScale;

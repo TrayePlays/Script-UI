@@ -1,4 +1,4 @@
-import { Dimensions, Position } from "../general/types";
+import { DimensionExpression, Dimensions, Position, PositionExpression } from "../general/types";
 import { BaseElement } from "./base";
 
 export interface PlayerRendererOptions {
@@ -18,8 +18,8 @@ export interface PlayerRendererOptions {
 
 export class PlayerRenderer extends BaseElement {
     constructor(
-        public size: Dimensions,
-        public offset: Position,
+        public size: DimensionExpression,
+        public offset: PositionExpression,
         public options: PlayerRendererOptions = {
             lookAtCursor: true,
             topPadding: 0
