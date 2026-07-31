@@ -992,7 +992,7 @@
                                 ],
                                 "anchor_from": "top_left",
                                 "anchor_to": "top_left",
-                                "text": "hello world",
+                                "text": "#text",
                                 "font_scale_factor": 1,
                                 "use_anchored_offset": true,
                                 "property_bag": {
