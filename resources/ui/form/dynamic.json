@@ -12,10 +12,9 @@
         "$texture_background": 68,
         "$texture_header": 76,
         "$title_font_scale_index": 84,
+        "$font_type_index": 92,
         "$title_font_scale_reducer": 0.01,
         "$negative_offset": 500,
-        // Example:
-        // dynamic:200:150:180:030:005:005:100:010|040:048:049:089:090:126:my_title:textures/ui/default_secondary_background:textures/ui/default_title_background
         "$header_size": 4,
         "controls": [
             {
@@ -102,7 +101,8 @@
                                                                     "use_anchored_offset": true,
                                                                     "property_bag": {
                                                                         "#anchored_offset_value_x": 1.0,
-                                                                        "#anchored_offset_value_y": 1.0
+                                                                        "#anchored_offset_value_y": 1.0,
+                                                                        "#font_type": "MinecraftTen"
                                                                     },
                                                                     "bindings": [
                                                                         {
@@ -133,7 +133,13 @@
                                                                             "binding_type": "view",
                                                                             "source_property_name": "((('%.' + (#title_text - ('%.' + ($text_index + $header_size) + 's') * #title_text) + 's') * #title_text) - (('%.' + (#title_text - ('%.' + $text_index + 's') * #title_text) + 's') * #title_text))",
                                                                             "target_property_name": "#text"
+                                                                        },
+                                                                        {
+                                                                            "binding_type": "view",
+                                                                            "source_property_name": "((('%.' + (#title_text - ('%.' + ($font_type_index + $header_size) + 's') * #title_text) + 's') * #title_text) - (('%.' + (#title_text - ('%.' + $font_type_index + 's') * #title_text) + 's') * #title_text))",
+                                                                            "target_property_name": "#font_type"
                                                                         }
+                                                                    
                                                                     ]
                                                                 }
                                                             }
@@ -350,12 +356,13 @@
                     "$default_button_background_texture|default": "textures/ui/default_button",
                     "$hover_button_background_texture|default": "textures/ui/hover_button",
                     "$pressed_button_background_texture|default": "textures/ui/pressed_button",
-                    "$default_tex_index": 67,
-                    "$hover_tex_index": 75,
-                    "$hover_text_index": 83,
                     "$font_scale_index": 51,
+                    "$font_type_index": 59,
+                    "$button_text_index": 67,
+                    "$default_tex_index": 75,
+                    "$hover_tex_index": 83,
+                    "$hover_text_index": 91,
                     "$font_scale_reducer": 0.01,
-                    "$button_text_index": 59,
                     "type": "panel",
                     "size": [
                         1,
@@ -378,7 +385,8 @@
                                 "text": "#text",
                                 "property_bag": {
                                     "#anchored_offset_value_y": 1.0,
-                                    "#anchored_offset_value_x": 1.0
+                                    "#anchored_offset_value_x": 1.0,
+                                    "#font_type": "default"
                                 },
                                 "bindings": [
                                     {
@@ -414,6 +422,11 @@
                                         "binding_type": "view",
                                         "source_property_name": "($font_scale_reducer * #font_scale_enlarged)",
                                         "target_property_name": "#font_scale_factor"
+                                    },
+                                    {
+                                        "binding_type": "view",
+                                        "source_property_name": "((('%.' + (#form_button_text - ('%.' + ($font_type_index + $header_size) + 's') * #form_button_text) + 's') * #form_button_text) - (('%.' + (#form_button_text - ('%.' + $font_type_index + 's') * #form_button_text) + 's') * #form_button_text))",
+                                        "target_property_name": "#font_type"
                                     },
                                     {
                                         "binding_type": "view",
@@ -724,12 +737,15 @@
                     "$default_button_background_texture|default": "textures/ui/default_button",
                     "$hover_button_background_texture|default": "textures/ui/hover_button",
                     "$pressed_button_background_texture|default": "textures/ui/pressed_button",
-                    "$default_tex_index": 67,
-                    "$hover_tex_index": 75,
-                    "$hover_text_index": 83,
+
                     "$font_scale_index": 51,
+                    "$font_type_index": 59,
+                    "$button_text_index": 67,
+                    "$default_tex_index": 75,
+                    "$hover_tex_index": 83,
+                    "$hover_text_index": 91,
                     "$font_scale_reducer": 0.01,
-                    "$button_text_index": 59,
+
                     "type": "panel",
                     "size": [
                         1,
@@ -752,7 +768,8 @@
                                 "text": "#text",
                                 "property_bag": {
                                     "#anchored_offset_value_y": 1.0,
-                                    "#anchored_offset_value_x": 1.0
+                                    "#anchored_offset_value_x": 1.0,
+                                    "#font_type": "default"
                                 },
                                 "bindings": [
                                     {
@@ -788,6 +805,11 @@
                                         "binding_type": "view",
                                         "source_property_name": "($font_scale_reducer * #font_scale_enlarged)",
                                         "target_property_name": "#font_scale_factor"
+                                    },
+                                    {
+                                        "binding_type": "view",
+                                        "source_property_name": "((('%.' + (#form_button_text - ('%.' + ($font_type_index + $header_size) + 's') * #form_button_text) + 's') * #form_button_text) - (('%.' + (#form_button_text - ('%.' + $font_type_index + 's') * #form_button_text) + 's') * #form_button_text))",
+                                        "target_property_name": "#font_type"
                                     },
                                     {
                                         "binding_type": "view",
@@ -984,6 +1006,7 @@
         "$button_text_grid_collection_name|default": "",
         "$button_type_panel": "common_buttons.new_ui_binding_button_label",
         "$button_state_panel|default": "dynamic.new_ui_button_panel",
+        // "collection_index": 0,
         // These states are for passing the button state to the button content - do not set these in a parent!
         "$default_state|default": false,
         "$hover_state|default": false,
@@ -1199,6 +1222,8 @@
                         1,
                         1
                     ],
+                    "$text_index": 22,
+                    "$font_type_index": 30,
                     "$font_scale_reducer": 0.01,
                     "controls": [
                         {
@@ -1216,7 +1241,8 @@
                                 "use_anchored_offset": true,
                                 "property_bag": {
                                     "#anchored_offset_value_y": 0.0,
-                                    "#anchored_offset_value_x": 0.0
+                                    "#anchored_offset_value_x": 0.0,
+                                    "#font_type": "default"
                                 },
                                 "bindings": [
                                     {
@@ -1226,23 +1252,28 @@
                                     },
                                     {
                                         "binding_type": "view",
-                                        "source_property_name": "((#form_button_text - '%.11s' * #form_button_text) - $negative_offset)",
+                                        "source_property_name": "((#form_button_text - '%.10s' * #form_button_text) - $negative_offset)",
                                         "target_property_name": "#anchored_offset_value_x"
                                     },
                                     {
                                         "binding_type": "view",
-                                        "source_property_name": "((#form_button_text - '%.15s' * #form_button_text) - $negative_offset)",
+                                        "source_property_name": "((#form_button_text - '%.14s' * #form_button_text) - $negative_offset)",
                                         "target_property_name": "#anchored_offset_value_y"
                                     },
                                     {
                                         "binding_type": "view",
-                                        "source_property_name": "($font_scale_reducer * (#form_button_text - '%.19s' * #form_button_text))",
+                                        "source_property_name": "($font_scale_reducer * (#form_button_text - '%.18s' * #form_button_text))",
                                         "target_property_name": "#font_scale_factor"
                                     },
                                     {
                                         "binding_type": "view",
-                                        "source_property_name": "(#form_button_text - '%.23s' * #form_button_text)",
+                                        "source_property_name": "((('%.' + (#form_button_text - ('%.' + ($text_index + $header_size) + 's') * #form_button_text) + 's') * #form_button_text) - (('%.' + (#form_button_text - ('%.' + $text_index + 's') * #form_button_text) + 's') * #form_button_text))",
                                         "target_property_name": "#text"
+                                    },
+                                    {
+                                        "binding_type": "view",
+                                        "source_property_name": "((('%.' + (#form_button_text - ('%.' + ($font_type_index + $header_size) + 's') * #form_button_text) + 's') * #form_button_text) - (('%.' + (#form_button_text - ('%.' + $font_type_index + 's') * #form_button_text) + 's') * #form_button_text))",
+                                        "target_property_name": "#font_type"
                                     }
                                 ]
                             }

@@ -5,8 +5,8 @@ import { Label } from "../elements/label";
 import { Stacker } from "../elements/stacker";
 
 export type BodyTextures = {
-    body_texure: string;
-    header_texture: string;
+    body_texure: string | undefined;
+    header_texture: string | undefined;
 };
 
 export interface DynamicPacketMap {

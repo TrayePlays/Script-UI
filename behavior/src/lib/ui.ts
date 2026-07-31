@@ -4,7 +4,7 @@ import { BLANK_TEX, DEFAULT_BUTTON_TEX } from "./data";
 import { charMap, DEFAULT_CHAR_WIDTH } from "./char";
 import { Button } from "./elements/button";
 import { Image } from "./elements/image";
-import { Label, TextAlignment } from "./elements/label";
+import { Label, LabelOptionFontType, TextAlignment } from "./elements/label";
 import { BodyTextures, Dimensions, DynamicPacketMap, Element, Position, SizedElement } from "./general/types";
 import { Stacker } from "./elements/stacker";
 import { UIUtils } from "./general/util";
@@ -21,7 +21,11 @@ export class DynamicActionUI {
     private hasTitle = false;
     private addTitle: (() => any) | undefined;
 
+    private titleString: string = '';
     private buttonStrings: { str: string, texture: string | undefined }[] = [];
+    private labelStrings: string[] = [];
+    private imageStrings: string[] = [];
+    private playerRendererStrings: string[] = [];
 
     public scrollHeight: number = 0;
     private scrollingPanel: ScrollingPanel;
@@ -66,6 +70,7 @@ export class DynamicActionUI {
             body: this.bodyTextures.body_texure ?? BLANK_TEX,
             header: this.bodyTextures.header_texture ?? BLANK_TEX,
             font_scale: fontSize * 100,
+            font_type: title.labelOptions.fontType ?? LabelOptionFontType.Default
         };
 
         const correctedHeaderY = this.headerOffset.y - this.headerSize.height;
@@ -103,6 +108,7 @@ export class DynamicActionUI {
             nums.push(this.scrollHeight);
 
             const string = this.buildDynamicString(packets, nums.map(n => Math.floor(n)), "dynamic:");
+            this.titleString = string;
 
             this.f.title(string);
         }
@@ -178,6 +184,7 @@ export class DynamicActionUI {
 
         const packets: DynamicPacketMap = {
             font_scale: fontSize * 100,
+            font_type: label?.labelOptions.fontType ?? LabelOptionFontType.Default,
             text: label?.getText() ?? "",
             default_tex: default_texture ?? "",
             hover_tex: hover_texture ?? "",
@@ -196,8 +203,6 @@ export class DynamicActionUI {
 
 
         const nums = [bw, bh, bx, by, iw, ih, ix, iy, tx, ty].map((n) => Math.floor(n));
-
-        console.warn(JSON.stringify(nums))
 
         nums.map(n => {
             if (n > 999) {
@@ -287,10 +292,15 @@ export class DynamicActionUI {
 
         x += alignmentOffset;
 
-        const nums = [x + this.NEGATIVE_OFFSET, y + this.NEGATIVE_OFFSET, fontSize * 100].map((n) => Math.floor(n));
-        const string = `l${this.generateRandomString(9)}:${nums.map((n) => this.formatNumber(n)).join(":")}`;
+        const packets: DynamicPacketMap = {
+            text: text,
+            font_type: label.labelOptions.fontType ?? LabelOptionFontType.Default
+        }
 
-        this.f.label(`${string}:${text}`); // No need for packets as only one packet, meaning i can just read the remaining string
+        const nums = [x + this.NEGATIVE_OFFSET, y + this.NEGATIVE_OFFSET, fontSize * 100].map((n) => Math.floor(n));
+        const string = this.buildDynamicString(packets, nums, `l${this.generateRandomString(9)}`);
+
+        this.labelStrings.push(string);
 
         this.tryUpdateScrollHeight(h + y);
 
@@ -322,7 +332,7 @@ export class DynamicActionUI {
 
         this.tryUpdateScrollHeight(h + y);
 
-        this.f.body(string);
+        this.playerRendererStrings.push(string);
 
         this.playerRenderers.push(renderer);
         return this;
@@ -540,6 +550,18 @@ export class DynamicActionUI {
             this.f.button(button.str, button.texture);
         }
 
+        for (const label of this.labelStrings) {
+            this.f.label(label);
+        }
+
+        for (const image of this.imageStrings) {
+            this.f.header(image);
+        }
+
+        for (const renderer of this.playerRendererStrings) {
+            this.f.body(renderer);
+        }
+
         // This is done after calculating scroll height as scroll height is sent through the title
         if (this.addTitle) this.addTitle();
 
@@ -618,8 +640,45 @@ export class DynamicActionUI {
             .map((p) => p.toString())
             .join(":");
 
-        // console.warn(result);
-
         return result;
     }
+
+    /**
+     * 
+     * @returns Run after showing a form to get strings
+     */
+    public getStrings(): string {
+        let string =
+`
+Title: ${this.titleString}
+Buttons: ${JSON.stringify(this.buttonStrings)}
+Images: ${JSON.stringify(this.imageStrings)}
+Labels: ${JSON.stringify(this.labelStrings)}
+Player-Renderers: ${JSON.stringify(this.playerRendererStrings)}
+
+
+Code:
+const f = new ActionFormData();
+f.title("${this.titleString}");
+`
+
+        for (const button of this.buttonStrings) {
+            string += `\nf.button("${button.str}", "${button.texture}")`
+        }
+
+        for (const image of this.imageStrings) {
+            string += `\nf.header("${image}")`
+        }
+
+        for (const label of this.labelStrings) {
+            string += `\nf.label("${label}")`
+        }
+
+        for (const renderer of this.playerRendererStrings) {
+            string += `\nf.body("${renderer}")`
+        }
+
+        return string;
+    }
 }
+

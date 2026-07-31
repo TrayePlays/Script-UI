@@ -10,6 +10,12 @@ export enum LabelOptionWrapType {
     WordWrap = 'wordWrap'
 }
 
+export enum LabelOptionFontType {
+    Default = 'default',
+    MinecraftTen = 'MinecraftTen'
+}
+
+
 export interface LabelOptions {
 
     /**
@@ -18,6 +24,12 @@ export interface LabelOptions {
      * @default LabelOptionWrapType.WordWrap
      */
     wrapType?: LabelOptionWrapType
+
+    /**
+     * The font type of the label
+     * @default LabelOptionFontType.Default
+     */
+    fontType?: LabelOptionFontType | string
 }
 
 export class Label extends BaseElement {
@@ -31,7 +43,8 @@ export class Label extends BaseElement {
         public textAlignment: TextAlignment = "left",
         public wrapWidth?: number,
         public labelOptions: LabelOptions = {
-            wrapType: LabelOptionWrapType.WordWrap
+            wrapType: LabelOptionWrapType.WordWrap,
+            fontType: LabelOptionFontType.Default
         }
     ) {
         super(offset, { width: 0, height: 0 });

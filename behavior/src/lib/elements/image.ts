@@ -4,7 +4,8 @@ import { BaseElement } from "./base";
 export interface ImageOptions {
 
     /**
-     * If the image should appear under the button or not
+     * If the image should appear under the button or not, will be
+     * ignored if the Image instance is used for a button image
      * @default false
      */
     appearUnderButton: boolean
